@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+
+  <link rel="stylesheet" href="/assets/css/just-the-docs-default.css">
+
+  
+
+  
+    <script type="text/javascript" src="/assets/js/vendor/lunr.min.js"></script>
+  
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@9.1.6/dist/mermaid.min.js"></script>
+  
+
+  <script type="text/javascript" src="/assets/js/just-the-docs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Security Guide to Proxy Vulns | yAcademy Proxies Research</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Security Guide to Proxy Vulns" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Proxies Research Compilation" />
+<meta property="og:description" content="Proxies Research Compilation" />
+<link rel="canonical" href="http://localhost:4000/docs/Security_Guide/" />
+<meta property="og:url" content="http://localhost:4000/docs/Security_Guide/" />
+<meta property="og:site_name" content="yAcademy Proxies Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Security Guide to Proxy Vulns" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Proxies Research Compilation","headline":"Security Guide to Proxy Vulns","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/yacademy-logo.png"}},"url":"http://localhost:4000/docs/Security_Guide/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+</head>
+
+<body>
+  <a class="skip-to-main" href="#main-content">Skip to main content</a>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="svg-link" viewBox="0 0 24 24">
+      <title>Link</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      </svg>
+    </symbol>
+    <symbol id="svg-search" viewBox="0 0 24 24">
+      <title>Search</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-menu" viewBox="0 0 24 24">
+      <title>Menu</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
+        <line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </symbol>
+    <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+      <title>Expand</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </symbol>
+    <symbol id="svg-doc" viewBox="0 0 24 24">
+      <title>Document</title>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>
+      </svg>
+    </symbol>
+    <!-- Feather. MIT License: https://github.com/feathericons/feather/blob/master/LICENSE -->
+<symbol id="svg-external-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link">
+  <title id="svg-external-link-title">(external link)</title>
+  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+</symbol>
+
+  </svg>
+
+  <div class="side-bar">
+    <div class="site-header">
+      <a href="/" class="site-title lh-tight">
+  <div class="site-logo"></div>
+
+</a>
+      <a href="#" id="menu-button" class="site-button">
+        <svg viewBox="0 0 24 24" class="icon"><use xlink:href="#svg-menu"></use></svg>
+      </a>
+    </div>
+    <nav role="navigation" aria-label="Main" id="site-nav" class="site-nav">
+      
+      
+        <ul class="nav-list"><li class="nav-list-item"><a href="/" class="nav-list-link">yAcademy Proxies Research</a></li><li class="nav-list-item"><a href="#" class="nav-list-expander" aria-label="toggle links in Full List of Proxy Types category">
+            <svg viewBox="0 0 24 24"><use xlink:href="#svg-arrow-right"></use></svg>
+          </a><a href="/docs/Proxies-List/" class="nav-list-link">Full List of Proxy Types</a><ul class="nav-list "><li class="nav-list-item "><a href="/docs/Proxies-Storage/" class="nav-list-link">Proxies Storage</a></li><li class="nav-list-item "><a href="/docs/Delegatecall-with-selfdestruct/" class="nav-list-link">Delegatecall with Selfdestruct</a></li><li class="nav-list-item "><a href="/docs/Proxies-Table/" class="nav-list-link">Proxies Table</a></li></ul></li><li class="nav-list-item active"><a href="#" class="nav-list-expander" aria-label="toggle links in Security Guide to Proxy Vulns category">
+            <svg viewBox="0 0 24 24"><use xlink:href="#svg-arrow-right"></use></svg>
+          </a><a href="/docs/Security_Guide/" class="nav-list-link active">Security Guide to Proxy Vulns</a><ul class="nav-list "><li class="nav-list-item "><a href="/docs/Proxy-Identification/" class="nav-list-link">Proxy Identification Flowchart</a></li></ul></li><li class="nav-list-item"><a href="/docs/Dev_Guide/" class="nav-list-link">Developer's Guide to Proxies</a></li><li class="nav-list-item external">
+      <a href="https://yacademy.dev/" class="nav-list-link external">
+        yAcademy Website
+        <svg viewBox="0 0 24 24" aria-labelledby="svg-external-link-title"><use xlink:href="#svg-external-link"></use></svg>
+      </a>
+    </li></ul>
+      
+      
+    </nav>
+
+    
+    
+      <footer class="site-footer">
+        <!-- This site uses <a href="https://github.com/just-the-docs/just-the-docs">Just the Docs</a>, a documentation theme for Jekyll. -->
+      </footer>
+    
+  </div>
+  <div class="main" id="top">
+    <div id="main-header" class="main-header">
+      
+
+        
+
+        <div class="search">
+          <div class="search-input-wrap">
+            <input type="text" id="search-input" class="search-input" tabindex="0" placeholder="Search yAcademy Proxies Research" aria-label="Search yAcademy Proxies Research" autocomplete="off">
+            <label for="search-input" class="search-label"><svg viewBox="0 0 24 24" class="search-icon"><use xlink:href="#svg-search"></use></svg></label>
+          </div>
+          <div id="search-results" class="search-results"></div>
+        </div>
+      
+      
+      
+    </div>
+    <div id="main-content-wrap" class="main-content-wrap">
+      
+        
+      
+      <div id="main-content" class="main-content" role="main">
+        
+          <p>If you are unsure which proxy type is in the scope of your audit or security review, see the <a href="/docs/Proxy-Identification">proxy identification flow chart</a>.</p>
+      <h1 id="uninitialized-proxy">
+        
+        
+          <a href="#uninitialized-proxy" class="anchor-heading" aria-labelledby="uninitialized-proxy"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Uninitialized Proxy
+        
+        
+      </h1>
+    
+
+<p>Impacts UUPS proxies because…</p>
+      <h2 id="bug-bounties">
+        
+        
+          <a href="#bug-bounties" class="anchor-heading" aria-labelledby="bug-bounties"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Bug Bounties
+        
+        
+      </h2>
+    
+
+<ul>
+  <li>Wormhole: https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a</li>
+  <li>Harvest: https://medium.com/immunefi/harvest-finance-uninitialized-proxies-bug-fix-postmortem-ea5c0f7af96b</li>
+  <li>Teller: https://medium.com/immunefi/teller-bug-fix-postmorten-and-bug-bounty-launch-b3f67a65c5ac</li>
+  <li>Aave V2: https://blog.trailofbits.com/2020/12/16/breaking-aave-upgradeability/ and https://medium.com/aave/aave-security-newsletter-546bf964689d</li>
+</ul>
+      <h2 id="testing-procedure">
+        
+        
+          <a href="#testing-procedure" class="anchor-heading" aria-labelledby="testing-procedure"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Testing procedure
+        
+        
+      </h2>
+    
+
+<p>To test for this vuln, you can approach it from angles XYZ</p>
+      <h2 id="ctf-examples">
+        
+        
+          <a href="#ctf-examples" class="anchor-heading" aria-labelledby="ctf-examples"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CTF Examples
+        
+        
+      </h2>
+    
+
+<p>Coming soon…</p>
+      <h1 id="storage-collisions">
+        
+        
+          <a href="#storage-collisions" class="anchor-heading" aria-labelledby="storage-collisions"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Storage Collisions
+        
+        
+      </h1>
+    
+
+<p>Impacts X because…</p>
+      <h2 id="hacks">
+        
+        
+          <a href="#hacks" class="anchor-heading" aria-labelledby="hacks"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Hacks
+        
+        
+      </h2>
+    
+
+<ul>
+  <li>https://solidity-by-example.org/hacks/delegatecall/</li>
+  <li>https://blog.audius.co/article/audius-governance-takeover-post-mortem-7-23-22</li>
+</ul>
+      <h2 id="testing-procedure-1">
+        
+        
+          <a href="#testing-procedure-1" class="anchor-heading" aria-labelledby="testing-procedure-1"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Testing procedure
+        
+        
+      </h2>
+    
+
+<p>To test for this vuln, you can approach it from angles XYZ</p>
+      <h2 id="ctf-examples-1">
+        
+        
+          <a href="#ctf-examples-1" class="anchor-heading" aria-labelledby="ctf-examples-1"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CTF Examples
+        
+        
+      </h2>
+    
+
+<p>Coming soon…</p>
+      <h1 id="function-collisionsclashing">
+        
+        
+          <a href="#function-collisionsclashing" class="anchor-heading" aria-labelledby="function-collisionsclashing"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Function Collisions/Clashing
+        
+        
+      </h1>
+    
+
+<ul>
+  <li>https://github.com/tinchoabbate/function-clashing-poc</li>
+  <li>https://medium.com/nomic-foundation-blog/malicious-backdoors-in-ethereum-proxies-62629adf3357</li>
+  <li>https://docs.openzeppelin.com/sdk/2.5/pattern#transparent-proxies-and-function-clashes</li>
+</ul>
+      <h2 id="testing-procedure-2">
+        
+        
+          <a href="#testing-procedure-2" class="anchor-heading" aria-labelledby="testing-procedure-2"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Testing procedure
+        
+        
+      </h2>
+    
+
+<p>To test for this vuln, you can approach it from angles XYZ…</p>
+      <h2 id="ctf-examples-2">
+        
+        
+          <a href="#ctf-examples-2" class="anchor-heading" aria-labelledby="ctf-examples-2"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CTF Examples
+        
+        
+      </h2>
+    
+
+<p>Coming soon…</p>
+      <h1 id="create2-contract-replacement">
+        
+        
+          <a href="#create2-contract-replacement" class="anchor-heading" aria-labelledby="create2-contract-replacement"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CREATE2 contract replacement
+        
+        
+      </h1>
+    
+
+<p>Cannot be verified on etherscan?! Need to check on this.</p>
+      <h2 id="testing-procedure-3">
+        
+        
+          <a href="#testing-procedure-3" class="anchor-heading" aria-labelledby="testing-procedure-3"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Testing procedure
+        
+        
+      </h2>
+    
+
+<p>To test for this vuln, you can approach it from angles XYZ…</p>
+      <h2 id="ctf-examples-3">
+        
+        
+          <a href="#ctf-examples-3" class="anchor-heading" aria-labelledby="ctf-examples-3"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CTF Examples
+        
+        
+      </h2>
+    
+
+<p>Coming soon…</p>
+      <h1 id="oz-uups-vuln">
+        
+        
+          <a href="#oz-uups-vuln" class="anchor-heading" aria-labelledby="oz-uups-vuln"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> OZ UUPS vuln
+        
+        
+      </h1>
+    
+
+<ul>
+  <li>https://github.com/OpenZeppelin/openzeppelin-contracts/security/advisories/GHSA-5vp3-v4hc-gx76</li>
+  <li>https://www.iosiro.com/blog/openzeppelin-uups-proxy-vulnerability-disclosure</li>
+</ul>
+      <h2 id="testing-procedure-4">
+        
+        
+          <a href="#testing-procedure-4" class="anchor-heading" aria-labelledby="testing-procedure-4"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> Testing procedure
+        
+        
+      </h2>
+    
+
+<p>To test for this vuln, you can approach it from angles XYZ…</p>
+      <h2 id="ctf-examples-4">
+        
+        
+          <a href="#ctf-examples-4" class="anchor-heading" aria-labelledby="ctf-examples-4"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#svg-link"></use></svg></a> CTF Examples
+        
+        
+      </h2>
+    
+
+<p>Coming soon…</p>
+
+        
+
+        
+          <hr>
+          <h2 class="text-delta">Table of contents</h2>
+          <ul>
+            
+              <li>
+                <a href="/docs/Proxy-Identification/">Proxy Identification Flowchart</a>
+              </li>
+            
+          </ul>
+        
+
+        
+        
+          <hr>
+          <footer>
+            
+              <p><a href="#top" id="back-to-top">Back to top</a></p>
+            
+
+            <p class="text-small text-grey-dk-100 mb-0">Copyright &copy; 2022 yAcademy</p>
+
+            
+              <div class="d-flex mt-2">
+                
+                
+              </div>
+            
+          </footer>
+        
+
+      </div>
+    </div>
+
+    
+      
+
+      <div class="search-overlay"></div>
+    
+  </div>
+</body>
+
+  <script>
+    var config = {}
+;
+    mermaid.initialize(config);
+    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+  </script>
+
+</html>
+
