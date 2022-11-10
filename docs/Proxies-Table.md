@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Proxies Table
-nav_order: 3
+nav_order: 2
 parent: Full List of Proxy Types
 ---
 
