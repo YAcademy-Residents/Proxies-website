@@ -154,7 +154,7 @@ layout: table_wrappers
         {% else %}
           {{ content }}
         {% endif %}
-
+<!--
         {% if page.has_children == true and page.has_toc != false %}
           <hr>
           <h2 class="text-delta">Table of contents</h2>
@@ -166,7 +166,7 @@ layout: table_wrappers
             {% endfor %}
           </ul>
         {% endif %}
-
+-->
         {% capture footer_custom %}
           {%- include footer_custom.html -%}
         {% endcapture %}

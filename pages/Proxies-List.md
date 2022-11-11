@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Full List of Proxy Types
-nav_order: 2
+title: Proxies Deep Dive
+nav_order: 3
 has_children: true
 ---
 
@@ -15,7 +15,7 @@ has_children: true
 
 > And Vitalik said, "Let there be Proxies!"
 
-The proxy itself is not inherantly upgradeable, but it is the basis for just about all upgradeable proxy patterns.  Calls made to the **proxy** contract are forwarded to the **implementation** contract using `delegatecall`.
+The proxy itself is not inherently upgradeable, but it is the basis for just about all upgradeable proxy patterns.  Calls made to the **proxy** contract are forwarded to the **implementation** contract using `delegatecall`.
 
 In some variants, calls to the proxy are only forwarded if the caller matches an "owner" address.
 
@@ -40,7 +40,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [Synthetix](https://github.com/Synthetixio/synthetix/pull/1191)
  
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
 
 ### Variations
 * [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way.  This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
@@ -56,7 +56,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 
 > "But what are we supposed to do without a `constructor()`?"
 
-Most modern day proxies are initializeable. One of the main benefits of using a proxy is that you only have to deploy the implementation contract once, and then you can deploy many proxy contracts that point at it. However, the downside to this is that you cannot use a constructor in the already deployed implementaion contract when creating the new proxy.
+Most modern day proxies are initializeable. One of the main benefits of using a proxy is that you only have to deploy the implementation contract once, and then you can deploy many proxy contracts that point at it. However, the downside to this is that you cannot use a constructor in the already deployed implementation contract when creating the new proxy.
 
 Instead, an `initialize()` function is used to set initial storage values:
 
@@ -130,10 +130,10 @@ For security, it is also recommended to use a form of access control to differen
 * This basic style is not widely used anymore. 
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollissionHack.t.sol)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollission/UpgradeableProxy_functionCollissionHack.t.sol)
+* [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollisionHack.t.sol)
+* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollision/UpgradeableProxy_functionCollisionHack.t.sol)
 
 ### Further reading
 * [The First Proxy Contract](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/05-proxy-nick-johnson/)
@@ -175,7 +175,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 
 ### Known vulnerabilities
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollission/UpgradeableProxy_functionCollissionHack.t.sol)
+* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollision/UpgradeableProxy_functionCollisionHack.t.sol)
 
 ### Further reading
 * [EIP-1967 Standard Proxy Storage Slots](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/09-eip-1967/)
@@ -225,9 +225,9 @@ modifier ifAdmin() {
 * [Hundreds of projects on Github](https://github.com/search?q=adminupgradeabilityproxy&type=Code)
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollissionHack.t.sol)
+* [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollicdsionHack.t.sol)
 
 ### Further reading
 * [The Transparent Proxy Pattern](https://blog.openzeppelin.com/the-transparent-proxy-pattern/)
@@ -240,7 +240,7 @@ modifier ifAdmin() {
 
 > What if we move the upgrade logic to the impl contract? 🤔
 
-EIP-1822 describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy (saving gas) at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy. 
+[EIP-1822](https://eips.ethereum.org/EIPS/eip-1822) describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy (saving gas) at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy. 
 
 The UUPS proxy also contains a check when upgrading that ensures the new implementation contract is upgradeable.
 
@@ -420,3 +420,4 @@ This can be achieved by having the initcode retrieve the creation code from the 
 ### Further reading
 * [Metamorphosis Smart Contracts using CREATE2](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/12-metamorphosis-create2/)
 * [The Promise and the Peril of Metamorphic Contracts](https://0age.medium.com/the-promise-and-the-peril-of-metamorphic-contracts-9eb8b8413c5e)
+* [a16z Metamorphic Contract Detector Tool](https://a16zcrypto.com/metamorphic-smart-contract-detector-tool/)
