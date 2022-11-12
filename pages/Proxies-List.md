@@ -40,7 +40,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [Synthetix](https://github.com/Synthetixio/synthetix/pull/1191)
  
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionClashing/UUPSProxy_functionClashing.t.sol)
 
 ### Variations
 * [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way.  This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
@@ -50,13 +50,13 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [OpenZeppelin core Proxy contract](https://docs.openzeppelin.com/contracts/4.x/api/proxy#Proxy)
 * [Deep dive into the Minimal Proxy contract](https://blog.openzeppelin.com/deep-dive-into-the-minimal-proxy-contract/)
 
----------
+---
 
 ## The Initializeable Proxy
 
 > "But what are we supposed to do without a `constructor()`?"
 
-Most modern day proxies are initializeable. One of the main benefits of using a proxy is that you only have to deploy the implementation contract once, and then you can deploy many proxy contracts that point at it. However, the downside to this is that you cannot use a constructor in the already deployed implementation contract when creating the new proxy.
+Most modern day proxies are initializeable. One of the main benefits of using a proxy is that you only have to deploy the implementation contract (AKA the logic contract) once, and then you can deploy many proxy contracts that point at it. However, the downside to this is that you cannot use a constructor in the already deployed implementation contract when creating the new proxy.
 
 Instead, an `initialize()` function is used to set initial storage values:
 
@@ -98,7 +98,7 @@ Instead, an `initialize()` function is used to set initial storage values:
 * [The First Proxy Contract](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/05-proxy-nick-johnson/)
 * [Writing Upgradeable Contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable)
 
----------
+---
 
 ## The Upgradeable Proxy
 
@@ -122,7 +122,7 @@ For security, it is also recommended to use a form of access control to differen
 * Implementation contract is upgradeable.
 
 ### Cons
-* Prone to storage and function collisions.
+* Prone to storage and function clashing.
 * Less secure than modern counterparts.
 * Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
 
@@ -130,17 +130,16 @@ For security, it is also recommended to use a form of access control to differen
 * This basic style is not widely used anymore. 
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionClashing/UUPSProxy_functionClashing.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
 * [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollisionHack.t.sol)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollision/UpgradeableProxy_functionCollisionHack.t.sol)
+* [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionClashing/UpgradeableProxy_functionClashingHack.t.sol)
 
 ### Further reading
 * [The First Proxy Contract](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/05-proxy-nick-johnson/)
 * [Writing Upgradeable Contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable)
 
--------
-
+---
 
 ## EIP-1967 Upgradeable Proxy
 
@@ -164,7 +163,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 * Block explorer compatibility
 
 ### Cons
-* Susceptible to function collisions.
+* Susceptible to function clashing.
 * Less secure than modern counterparts.
 * Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
 
@@ -175,17 +174,17 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 
 ### Known vulnerabilities
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollision/UpgradeableProxy_functionCollisionHack.t.sol)
+* [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionClashing/UpgradeableProxy_functionClashingHack.t.sol)
 
 ### Further reading
 * [EIP-1967 Standard Proxy Storage Slots](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/09-eip-1967/)
 * [The Proxy Delegate](https://fravoll.github.io/solidity-patterns/proxy_delegate.html)
--------
 
+---
 
 ## Transparent Proxy (TPP)
 
-> The "solution" to function collisions
+> The "solution" to function clashing
 
 This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy) and usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy), but when the permissioned functions are called, if admin is the caller then those functions are invoked directly on the proxy, otherwise the call is forwarded to the implementation contract. This is often implemented with a modifier like this one from [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51):
 
@@ -211,7 +210,7 @@ modifier ifAdmin() {
 
 ### Pros
 * Block explorer compatibility.
-* Reduces risk of function collisions due to [ifAdmin() ](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) modifier.
+* Reduces risk of function clashing due to [ifAdmin() ](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) modifier.
 * Reduces risk of storage collisions from use of [EIP-1967](#EIP-1967-Upgradeable-Proxy) storage slots.
 
 ### Cons
@@ -225,16 +224,14 @@ modifier ifAdmin() {
 * [Hundreds of projects on Github](https://github.com/search?q=adminupgradeabilityproxy&type=Code)
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollision.t.sol)
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCclashing/UUPSProxy_functionClashing.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
 * [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/TransparentProxy_storageCollision/TransparentProxy_storageCollicdsionHack.t.sol)
 
 ### Further reading
 * [The Transparent Proxy Pattern](https://blog.openzeppelin.com/the-transparent-proxy-pattern/)
 
-
--------
-
+---
 
 ## Universal Upgradeable Proxy Standard (UUPS)
 
@@ -244,9 +241,9 @@ modifier ifAdmin() {
 
 The UUPS proxy also contains a check when upgrading that ensures the new implementation contract is upgradeable.
 
-This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy).
+This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy) but is not required to.
 
-**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#EIP-1967-Proxy)).
+**Implementation address** - Located in a unique storage slot in the proxy contract, normally following [EIP-1967](#EIP-1967-Proxy).
 
 **Upgrade logic** - Located in the implementation contract.
 
@@ -270,7 +267,7 @@ This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy)
 
 ### Known vulnerabilities
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionCollision)
+* [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionClashing)
 * [Selfdestruct](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/test/UUPS_selfdestruct.t.sol)
 
 
@@ -279,8 +276,7 @@ This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy)
 * [Using UUPS Proxy Pattern](https://blog.logrocket.com/using-uups-proxy-pattern-upgrade-smart-contracts/)
 * [Perma-brick UUPS proxies with this one trick](https://iosiro.com/blog/openzeppelin-uups-proxy-vulnerability-disclosure)
 
--------
-
+---
 
 ## Beacon Proxy
 
@@ -313,7 +309,7 @@ EIP-1967 also references a Beacon address slot.
 
 ### Known vulnerabilities
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
-* [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionCollision)
+* [Function flashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionClashing)
 
 ### Variations
 * [Storageless Upgradeable Beacon Proxy](https://forum.openzeppelin.com/t/a-more-gas-efficient-upgradeable-proxy-by-not-using-storage/4111) - In this pattern, the beacon contract does not store the implementation contract address in storage, but instead stores it in code.  The proxy contract loads it from the proxy directly via `EXTCODECOPY`.
@@ -322,7 +318,7 @@ EIP-1967 also references a Beacon address slot.
 * [How to create a Beacon Proxy](https://medium.com/coinmonks/how-to-create-a-beacon-proxy-3d55335f7353)
 * [Dharma](https://github.com/dharma-eng/dharma-smart-wallet/blob/master/contracts/proxies/smart-wallet/UpgradeBeaconProxyV1.sol)
 
--------
+---
 
 ## Diamond Proxy
 
@@ -379,14 +375,13 @@ Glossary of Diamond proxy uses a unique vocabulary:
 * [Good idea, bad design. How the Diamond standard falls short](https://blog.trailofbits.com/2020/10/30/good-idea-bad-design-how-the-diamond-standard-falls-short/)
 * [Addressing Josselin Feist's Concern's of EIP-2535 Diamonds](https://dev.to/mudgen/addressing-josselin-feist-s-concern-s-of-eip-2535-diamond-standard-me8)
 
--------
-
+---
 
 ## Metamorphic Contracts
 
 > "create2, use, selfdestruct, rinse, repeat..."
 
-The metamorphic contract is unique from all the other upgradeable patterns in that it does NOT use a proxy. There is no `delegatecall` to an external logic contract.
+The metamorphic contract is unique from all the other upgradeable patterns in that it does NOT use a proxy. There is no `delegatecall` to an external implementation contract.
 
 When it's time for an upgrade, the metamorphic contract uses `selfdestruct` and the new contract is deployed to the same address using `create2`.
 
@@ -411,6 +406,7 @@ This can be achieved by having the initcode retrieve the creation code from the 
 * The `selfdestruct` opcode may be removed in the future.
 
 ### Examples
+* [Axelar Network](https://github.com/axelarnetwork/axelar-cgp-solidity/blob/main/contracts/deposit-service/DepositReceiver.sol) <- TODO @devtooligan is this a valid example?
 * This is more of an experimental type. Mostly used by MEV searchers.
 
 ### Known vulnerabilities

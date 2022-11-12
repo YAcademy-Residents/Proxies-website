@@ -9,6 +9,8 @@ has_children: true
 
 Note: If you are unsure which proxy type is in the scope of your audit or security review, see the [proxy identification guide](/pages/Proxy-Identification).
 
+---
+
 ## Uninitialized Proxy Vulnerability
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
@@ -45,6 +47,8 @@ None?
 - [OpenZeppelin proxy vulnerability](https://github.com/OpenZeppelin/openzeppelin-contracts/security/advisories/GHSA-5vp3-v4hc-gx76)
 - [iosiro blog post about OpenZeppelin vulnerability](https://www.iosiro.com/blog/openzeppelin-uups-proxy-vulnerability-disclosure)
 
+---
+
 ## Storage Collision Vulnerability
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
@@ -63,6 +67,8 @@ A third approach is to find a tool that is designed to compare the storage slots
 
 Neither of these approaches would have caught the vulnerability in the [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) hack, though a solution specific to the Furucombo hack would be to check if the proxy contract uses the standard storage slot of 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc (this value is [from EIP-1967](https://eips.ethereum.org/EIPS/eip-1967#abstract)) to store the implementation contract's address.
 
+OpenZeppelin [previously investigated an automated detection strategy](https://github.com/OpenZeppelin/openzeppelin-sdk/issues/37) for storage upgrades for zos.
+
 ### Hacks
 
 - [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) (Related writeups [here](https://rekt.news/furucombo-rekt/) and [here](https://github.com/OriginProtocol/security/blob/master/incidents/2021-02-27-Furucombo.md))
@@ -80,17 +86,19 @@ None?
 - [Ethernaut Level 24 "Puzzle Wallet"](https://github.com/OpenZeppelin/ethernaut/blob/master/contracts/contracts/levels/PuzzleWallet.sol)
 - [Underhanded Solidity 2020 entry 4](https://github.com/ethereum/solidity-underhanded-contest/tree/master/2020/submissions_2020/submission4_JaimeIglesias) from Jaime Iglesias
 
+---
+
 ### Further reading
 
 - [OpenZeppelin explanation](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions)
 - [semgrep rule to detect a specific case of proxy storage collision](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/proxy-storage-collision.yaml)
 - [MixBytes storage collision audit finding](https://mixbytes.io/blog/collisions-solidity-storage-layouts)
 
-## Function Collision/Clashing Vulnerability
+## Function Clashing Vulnerability
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
 
-Function collisions can be found in most but not all proxy types. Specifically UUPS proxies are normally not vulnerable to function collisions because the implementation contract stores all the custom functions.
+Function clashing can be found in most but not all proxy types. Specifically UUPS proxies are normally not vulnerable to function clashing because the implementation contract stores all the custom functions.
 
 ### Testing procedure
 
@@ -113,6 +121,8 @@ None?
 - [Tincho Function Clashing writeup](https://forum.openzeppelin.com/t/beware-of-the-proxy-learn-how-to-exploit-function-clashing/1070)
 - [Nomic Labs blog post](https://medium.com/nomic-foundation-blog/malicious-backdoors-in-ethereum-proxies-62629adf3357)
 - [OpenZeppelin Docs explaining function clashing](https://docs.openzeppelin.com/sdk/2.5/pattern#transparent-proxies-and-function-clashes)
+
+---
 
 ## Metamorphic Proxy Rug Vulnerability
 
@@ -149,6 +159,8 @@ None?
 - [PoC Metamorphic Contract Detector Tool](https://gist.github.com/engn33r/ec2d8f176bff962064afdadedb2d6faf)
 - [Rajeev forum post about CREATE2 security implications](https://ethereum-magicians.org/t/potential-security-implications-of-create2-eip-1014/2614)
 
+---
+
 ## Delegatecall with Selfdestruct Vulnerability
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct)
@@ -179,6 +191,7 @@ None?
 - [OpenZeppelin proxy vulnerability](https://github.com/OpenZeppelin/openzeppelin-contracts/security/advisories/GHSA-5vp3-v4hc-gx76)
 - [iosiro blog post about OpenZeppelin vulnerability](https://www.iosiro.com/blog/openzeppelin-uups-proxy-vulnerability-disclosure)
 
+---
 
 ## Delegatecall to Arbitrary Address
 
@@ -202,3 +215,32 @@ None?
 
 ### Further reading
 
+- [SWC-112](https://swcregistry.io/docs/SWC-112)
+
+---
+
+## Delegatecall external contract missing existence check
+
+When `delegatecall` is used, there is no automated check for whether the external contract exists. If the external contract called does not exist, the return value will be `true`. This is documented in a [warning note in the solidity documentation](https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions) with the following:
+
+> The low-level functions `call`, `delegatecall` and `staticcall` return `true` as their first return value if the account called is non-existent, as part of the design of the EVM. Account existence must be checked prior to calling if needed.
+
+### Testing procedure
+
+The first step is to identify the external contract address that the call is using. If it is possible for there to be no contract at this address, and there is no check in Yul (or a similar low-level language), then the `delegatecall` may return true unexpectedly.
+
+### Hacks
+
+None?
+
+### Bug Bounties
+
+- [ZeppelinOS bug](https://blog.trailofbits.com/2018/09/05/contract-upgrade-anti-patterns/)
+
+### CTF Examples
+
+None?
+
+### Further reading
+
+- [Manticore detection of nonexistent contract](https://github.com/trailofbits/manticore/pull/1119)
