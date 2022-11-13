@@ -6,8 +6,15 @@ has_children: true
 ---
 
 # Security Guide to Proxies
+{: .no_toc }
 
 Note: If you are unsure which proxy type is in the scope of your audit or security review, see the [proxy identification guide](/pages/Proxy-Identification).
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 ---
 
@@ -61,11 +68,11 @@ Take the Audius hack as an example. TODO: Add screenshots of storage slot layout
 
 There are many approaches to testing for this vulnerability. One way to test for this vulnerability is using the [sol2uml](https://github.com/naddison36/sol2uml) tool. You can visualize the storage slots of the proxy contract and the implementation contract to see if they have any mismatches.
 
-A second approach that is more programmatic can rely on [slither-read-storage](https://github.com/crytic/slither/blob/master/slither/tools/read_storage/README.md) to compare the proxy contract and implementation contract storage slots in a more automated fashion.
+A second approach that is more programmatic is using [slither-read-storage](https://github.com/crytic/slither/blob/master/slither/tools/read_storage/README.md) to collect the storage slots used by the proxy contract and the implementation contract, then comparing them.
 
-A third approach is to find a tool that is designed to compare the storage slots of two contracts. [This tool](https://github.com/ItsNickBarry/hardhat-storage-layout-diff) (which I haven't tested) may work.
+A third approach is to find a tool that is designed to compare the storage slots of two contracts. [This tool](https://github.com/ItsNickBarry/hardhat-storage-layout-diff) may work.
 
-Neither of these approaches would have caught the vulnerability in the [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) hack, though a solution specific to the Furucombo hack would be to check if the proxy contract uses the standard storage slot of 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc (this value is [from EIP-1967](https://eips.ethereum.org/EIPS/eip-1967#abstract)) to store the implementation contract's address.
+Be aware that these approaches would not have caught the vulnerability in the [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) hack. A solution specific to the Furucombo hack would be to check if the a delegatecall calls another contract with a delegatecall where the contracts used different storage slots to store their implementation contract addresses. One could argue this issue is a subcategory of the uninitialized proxy vulnerability.
 
 OpenZeppelin [previously investigated an automated detection strategy](https://github.com/OpenZeppelin/openzeppelin-sdk/issues/37) for storage upgrades for zos.
 
@@ -74,7 +81,7 @@ OpenZeppelin [previously investigated an automated detection strategy](https://g
 - [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) (Related writeups [here](https://rekt.news/furucombo-rekt/) and [here](https://github.com/OriginProtocol/security/blob/master/incidents/2021-02-27-Furucombo.md))
 - [Audius](https://blog.audius.co/article/audius-governance-takeover-post-mortem-7-23-22) (Related writeup [here](https://rekt.news/audius-rekt/))
 
-## Bug Bounties
+### Bug Bounties
 
 None?
 
@@ -98,11 +105,13 @@ None?
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
 
+Function clashing is a result of compiled smart contracts using a 4 byte identifier (derived from the function name's hash) to identify functions, known as a [function selector](https://docs.soliditylang.org/en/latest/abi-spec.html#function-selector). Functions with different names can contain identical 4 bytes identifiers when the first 32 bits of their hashes are the same. The compiler will detect when the same 4 byte function selector exists twice in a single contract, but it does not prevent the same 4 byte function selector from existing in different contracts of a project.
+
 Function clashing can be found in most but not all proxy types. Specifically UUPS proxies are normally not vulnerable to function clashing because the implementation contract stores all the custom functions.
 
 ### Testing procedure
 
-To test for this vuln, you can use [Slither's Function ID printer](https://github.com/crytic/slither/wiki/Printer-documentation#function-id) to compare function signatures of the proxy contract and the implementation contract.
+To test for this vuln, you can collect the function selectors of a proxy contract and implementation contract to compare them for any function clashing. One tool for this is solc, where `solc --hashes MyContract.sol` will list all function selectors. Another approach is to use [Slither's Function ID printer](https://github.com/crytic/slither/wiki/Printer-documentation#function-id).
 
 ### Hacks
 
@@ -133,12 +142,12 @@ The CREATE2 opcode was introduced in the Constantinople hardfork with [EIP-1014]
 ### Testing procedure
 
 To test for this vulnerability, you can use one of the existing tools mentioned in the "further reading" section, or to manually search for this issue:
-1. Find the creation transaction on eitherscan (manually or with [the etherscan API](https://docs.etherscan.io/api-endpoints/contracts#get-contract-creator-and-creation-tx-hash))
-2. Check if a CREATE2 call was used in the transaction that create this contract. If the contract WAS created with CREATE2, continue testing. If not, the contract is not at risk of being replaced at the same address.
+1. Find the creation transaction on etherscan (manually or with [the etherscan API](https://docs.etherscan.io/api-endpoints/contracts#get-contract-creator-and-creation-tx-hash))
+2. Check if a CREATE2 call was used in the transaction that created this target contract. If the target contract was created with CREATE2, continue testing. If not, the target contract is not at risk of being replaced with new code at the same address.
 3. Check if the target contract, created by a CREATE2 call, contains a selfdestruct or a delegatecall. If the delegatecall allows calling another contract's selfdestruct, it is the same result as finding a selfdestruct in the target contract.
-4. If CREATE2 was not used to create this contract but a selfdestruct or delegatecall exists, check if the parent of the target was created with a CREATE2 call. Continue checking the ancestry of the contract up the family tree, because a CREATE2 anywhere in the target contract's ancestry can pose a risk.
+4. If CREATE2 was not used to create this contract but a selfdestruct or delegatecall exists, check if the parent of the target was created with a CREATE2 call. Continue checking the ancestry of the contract up the family tree until you reach an EOA address, because a CREATE2 anywhere in the target contract's ancestry can pose a risk.
 
-Even if the contract you are examining is safe, it may perform an external call (call, staticcall, or delegatecall) to addresses that are unsafe. Consider checking all addresses stored in state variables for this vulnerability.
+Even if the target contract you are examining cannot be replace with this vulnerability, it may perform an external call (call, staticcall, or delegatecall) to another contract which is vulnerable to the metamorphic proxy rug vulnerability. Consider testing all external addresses that are called by the target contract.
 
 ### Hacks
 
@@ -154,10 +163,10 @@ None?
 
 ### Further reading
 
-- [CertiK blog post about their detection tool](https://medium.com/certik/introducing-certiks-create2-audit-tool-2c75f0b53f54)
-- [a16z Metamorphic Contract Detector Tool](https://a16zcrypto.com/metamorphic-smart-contract-detector-tool/)
-- [PoC Metamorphic Contract Detector Tool](https://gist.github.com/engn33r/ec2d8f176bff962064afdadedb2d6faf)
 - [Rajeev forum post about CREATE2 security implications](https://ethereum-magicians.org/t/potential-security-implications-of-create2-eip-1014/2614)
+- [CertiK metamorphic contract detector tool](https://medium.com/certik/introducing-certiks-create2-audit-tool-2c75f0b53f54)
+- [a16z metamorphic contract detector tool](https://a16zcrypto.com/metamorphic-smart-contract-detector-tool/)
+- [PoC metamorphic contract detector tool](https://gist.github.com/engn33r/ec2d8f176bff962064afdadedb2d6faf)
 
 ---
 
@@ -227,7 +236,7 @@ When `delegatecall` is used, there is no automated check for whether the externa
 
 ### Testing procedure
 
-The first step is to identify the external contract address that the call is using. If it is possible for there to be no contract at this address, and there is no check in Yul (or a similar low-level language), then the `delegatecall` may return true unexpectedly.
+The first step is to identify the external contract address that the call is using. If it is possible for there to be no contract at this address, and there is no check to verify that the contract exists before the `delegatecall`, then `delegatecall` may return true unexpectedly.
 
 ### Hacks
 
