@@ -22,7 +22,7 @@ Note: If you are unsure which proxy type is in the scope of your audit or securi
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
 
-Why do proxies need an `initialize` function when a contract constructor is called automatically? The reason is explained [here by OpenZeppelin](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#the-constructor-caveat). The code in a contract's constructor is run once at deployment, but there is no way to run constructor code of the implementation contract (AKA logic contract) *in the context* of the proxy contract. Because the implementation contract must store the value of the `_initialized` variable in the proxy contract context, the constructor cannot be used for this purpose, because the implementation contract's constructor code will always run in the context of the implementation contract. This is why there exists an `initialize` function in the implementation contract - because the `initialize` call must happen through the proxy.
+Why do proxies need an `initialize` function when a contract constructor is called automatically? The reason is explained [here by OpenZeppelin](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#the-constructor-caveat). The code in a contract's constructor is run once at deployment, but there is no way to run constructor code of the implementation contract (AKA logic contract) *in the context* of the proxy contract. Because the implementation contract must store the value of the `_initialized` variable in the proxy contract context, the constructor cannot be used for this purpose, because the implementation contract's constructor code will always run in the context of the implementation contract. This is why there exists an `initialize` function in the implementation contract - because the `initialize` call must happen through the proxy. Because the initialize call must happen as a separate step from the implementation contract deployment, there is a potential race condition that can happen that should also received attention, such as by protecting the `initialize` function with an address control modifier so only a specific `msg.sender` can initialize the function.
 
 A specific variant of the uninitialized UUPS proxy vulnerability is found in [the OpenZeppelin library between version 4.1.0 and 4.3.2](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/security/advisories/GHSA-q4h9-46xg-m3x9). This issue is related to an [edge case of delegatecall and selfdestruct interaction](/pages/Delegatecall-with-Selfdestruct).
 
@@ -31,6 +31,8 @@ A specific variant of the uninitialized UUPS proxy vulnerability is found in [th
 To test for this vulnerability, first identify the storage slot of the [initialized state variable](https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/25aabd286e002a1526c345c8db259d57bdf0ad28/contracts/proxy/utils/Initializable.sol#L62) or a similar variable that the initialization function uses to revert if this is not the first time that the function is called. Try using [these tools](/pages/Proxies-Storage.md) to find the correct storage slot. If the OpenZeppelin private `_initialized` variable from Initializable.sol is used, a `_initialized` value of zero means the contract has not been initialized while a `_initialized` value of 1 means the contract has been initialized.
 
 A simplistic check that has a low false-positive rate with a high false-negative is to check if the implementation contract has a non-empty constructor. Because any storage values set in the constructor of the implementation contract will not be used when the implementation contract is called through the proxy contract, a constructor can indicate a case of initialization values not getting set as expected.
+
+Slither has a `slither-check-upgradeability` tool that has [several initializer issue detectors](https://github.com/crytic/slither/wiki/Upgradeability-Checks).
 
 ### Hacks
 
@@ -58,7 +60,7 @@ None?
 
 ## Storage Collision Vulnerability
 
-[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/storage_collision)
 
 A storage collision happens when the storage slot layout in the implementation contract does not match the storage slot layout in the proxy contract. This causes a problem because the `delegatecall` in the proxy contract means that the implementation contract is using the proxy contract's storage, but the variables in the implementation contract determine where that data is stored. If there is a mismatch between the proxy contract storage slots and the implementation contract storage slots, a storage collision can happen.
 
@@ -75,6 +77,8 @@ A third approach is to find a tool that is designed to compare the storage slots
 Be aware that these approaches would not have caught the vulnerability in the [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) hack. A solution specific to the Furucombo hack would be to check if the a delegatecall calls another contract with a delegatecall where the contracts used different storage slots to store their implementation contract addresses. One could argue this issue is a subcategory of the uninitialized proxy vulnerability.
 
 OpenZeppelin [previously investigated an automated detection strategy](https://github.com/OpenZeppelin/openzeppelin-sdk/issues/37) for storage upgrades for zos.
+
+Slither has a `slither-check-upgradeability` tool that has [several detectors for storage layout issues](https://github.com/crytic/slither/wiki/Upgradeability-Checks).
 
 ### Hacks
 
@@ -103,7 +107,7 @@ None?
 
 ## Function Clashing Vulnerability
 
-[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/function_clashing)
 
 Function clashing is a result of compiled smart contracts using a 4 byte identifier (derived from the function name's hash) to identify functions, known as a [function selector](https://docs.soliditylang.org/en/latest/abi-spec.html#function-selector). Functions with different names can contain identical 4 bytes identifiers when the first 32 bits of their hashes are the same. The compiler will detect when the same 4 byte function selector exists twice in a single contract, but it does not prevent the same 4 byte function selector from existing in different contracts of a project.
 
@@ -111,7 +115,7 @@ Function clashing can be found in most but not all proxy types. Specifically UUP
 
 ### Testing procedure
 
-To test for this vuln, you can collect the function selectors of a proxy contract and implementation contract to compare them for any function clashing. One tool for this is solc, where `solc --hashes MyContract.sol` will list all function selectors. Another approach is to use [Slither's Function ID printer](https://github.com/crytic/slither/wiki/Printer-documentation#function-id).
+To test for this vuln, you can collect the function selectors of a proxy contract and implementation contract to compare them for any function clashing. One tool for this is solc, where `solc --hashes MyContract.sol` will list all function selectors. Slither has a [Slither's Function ID printer](https://github.com/crytic/slither/wiki/Printer-documentation#function-id) that can do the same thing. Slither also has a `slither-check-upgradeability` tool that can [detect function clashing](https://github.com/crytic/slither/wiki/Upgradeability-Checks#functions-ids-collisions).
 
 ### Hacks
 
@@ -135,7 +139,7 @@ None?
 
 ## Metamorphic Proxy Rug Vulnerability
 
-[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized)
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
 
 The CREATE2 opcode was introduced in the Constantinople hardfork with [EIP-1014](https://eips.ethereum.org/EIPS/eip-1014). It allows a contract to be deployed at an address that can be calculated in advance, unlike the CREATE opcode. It is possible to deploy a contract with `selfdestruct`, destroy the contract, and then deploy a new contract with different code at the same address as the original contract. If a user is unaware that the code at this address changed since they originally interacted with the contract, they might end up interacting with a malicious contract. 
 
@@ -204,6 +208,8 @@ None?
 
 ## Delegatecall to Arbitrary Address
 
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
+
 A `delegatecall` passes the execution from the proxy contract to another contract, but the state variables and context (msg.sender, msg.value) from the proxy contract are used. If the implementation contract that `delegatecall` passes execution to can be an arbitrary contract, substantial problems emerge. For one, a denial-of-service is possible by combining `delegatecall` with `selfdestruct` (see [the relevant section](#delegatecall-with-selfdestruct-vulnerability)). Another risk is that if users have used `approve` or set an allowance to trust the proxy contract containing the `delegatecall` to an arbitrary address, the arbitrary `delegatecall` target can be used to steal user funds. The address that a contract transfer execution to with `delegatecall` must be a trusted contract and must not be open-ended to allow a user to provide the address to delegate to.
 
 ### Testing procedure
@@ -229,6 +235,8 @@ None?
 ---
 
 ## Delegatecall external contract missing existence check
+
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
 
 When `delegatecall` is used, there is no automated check for whether the external contract exists. If the external contract called does not exist, the return value will be `true`. This is documented in a [warning note in the solidity documentation](https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions) with the following:
 

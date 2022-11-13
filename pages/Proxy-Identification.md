@@ -31,4 +31,6 @@ parent: Security Guide to Proxy Vulns
 
 ## Diamond Proxy Identifiers
 
-
+- Most likely has contract names that include the words "diamond", "facet", "loupe".
+- Per the [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) spec, the IDiamondLoupe interface must be implemented with these four functions: `facets()`, `facetFunctionSelectors(address _facet)`, `facetAddresses()`, `facetAddress(bytes4 _functionSelector)`
+- The function which contains `delegatecall` will allow the user to specify an argument to identify the facet that should be called by delegatecall. This argument specifying the facet may not necessarily be a function argument but could, for example, be `msg.data`.
