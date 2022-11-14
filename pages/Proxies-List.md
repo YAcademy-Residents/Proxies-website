@@ -102,7 +102,7 @@ Instead, an `initialize()` function is used to set initial storage values:
 
 > And the people said, "But we want to upgrade our immutable contracts!"
 
-The Upgradeable Proxy is similar to a [Proxy](#The-Proxy), except the implementation contract address is settable and kept in storage in the proxy contract. The proxy contract also contains permissioned upgrade functions. One of the [first upgradeable proxy contracts](https://gist.github.com/Arachnid/4ca9da48d51e23e5cfe0f0e14dd6318f) was written by [Nick Johnson](https://twitter.com/nicksdjohnson) in 2016.
+The Upgradeable Proxy is similar to a [Proxy](#the-proxy), except the implementation contract address is settable and kept in storage in the proxy contract. The proxy contract also contains permissioned upgrade functions. One of the [first upgradeable proxy contracts](https://gist.github.com/Arachnid/4ca9da48d51e23e5cfe0f0e14dd6318f) was written by [Nick Johnson](https://twitter.com/nicksdjohnson) in 2016.
 
 For security, it is also recommended to use a form of access control to differentiate between the owner/caller and the admin with permission to upgrade the contract.
 
@@ -116,13 +116,13 @@ For security, it is also recommended to use a form of access control to differen
 * A minimalistic upgrade contract. Useful for learning projects.
 
 ### Pros
-* Reduced deployment costs through use of the [Proxy](#The-proxy).
+* Reduced deployment costs through use of the [Proxy](#the-proxy).
 * Implementation contract is upgradeable.
 
 ### Cons
 * Prone to storage and function collisions.
 * Less secure than modern counterparts.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 ### Examples
 * This basic style is not widely used anymore.
@@ -144,7 +144,7 @@ For security, it is also recommended to use a form of access control to differen
 
 > The "solution" to storage collisions
 
-This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.  Instead the address is stored in a pre-agreed upon slot (for example ***0x360894...ca505d382bbc*** in [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol)) which has the added benefit of allowing block explorers to verify the contracts and properly show this information to end users.
+This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.  Instead the address is stored in a pre-agreed upon slot (for example ***0x360894...ca505d382bbc*** in [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol)) which has the added benefit of allowing block explorers to verify the contracts and properly show this information to end users.
 
 [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) also specifies a slot for admin storage (auth) as well as Beacon Proxies which will be discussed in detail below.
 
@@ -155,7 +155,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 **Contract verification** - Yes, most evm block explorers support it.
 
 ### Use cases
-* When you need more security than the basic [Upgradeable Proxy](#The-Upgradeable-Proxy).
+* When you need more security than the basic [Upgradeable Proxy](#the-upgradeable-proxy).
 
 ### Pros
 * Reduces risk of storage collisions.
@@ -164,11 +164,11 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 ### Cons
 * Susceptible to function collisions.
 * Less secure than modern counterparts.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 
 ### Examples
-* While the EIP-1967 storage slot pattern has been widely adopted in most modern upgradeable proxy types, this bare bones contract is not seen in the wild as much as some of the newer patterns like Beacon, TPP and UUPS.
+* While the [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) storage slot pattern has been widely adopted in most modern upgradeable proxy types, this bare bones contract is not seen in the wild as much as some of the newer patterns like [TPP](#transparent-proxy-tpp), [UUPS](#universal-upgradeable-proxy-standard-uups), and [Beacon](#beacon-proxy).
 
 
 ### Known vulnerabilities
@@ -186,7 +186,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 
 > The "solution" to function collisions
 
-This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy) and usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy). But, if the caller is the admin of the proxy, the proxy will not delegate any calls, and if the caller is any other address, the proxy will always delegate the call, even if it matches one of the proxy’s own functions. This is often implemented with a modifier like this one from [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51):
+This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy) and usually incorporates [EIP-1967](#eip-1967-upgradeable-proxy). But, if the caller is the admin of the proxy, the proxy will not delegate any calls, and if the caller is any other address, the proxy will always delegate the call, even if the func sig matches one of the proxy’s own functions. This is often implemented with a modifier like this one from [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51):
 
 ```solidity
 modifier ifAdmin() {
@@ -203,7 +203,7 @@ and a check in the `fallback()`:
 require(msg.sender != _getAdmin(), "TransparentUpgradeableProxy: admin cannot fallback to proxy target");
 ```
 
-**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#EIP-1967-Proxy)).
+**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#eip-1967-upgradeable-proxy)).
 
 **Upgrade logic** - Located in the proxy contract with use of a [modifier](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) to re-route non-admin callers.
 
@@ -214,13 +214,14 @@ require(msg.sender != _getAdmin(), "TransparentUpgradeableProxy: admin cannot fa
 * This pattern is very widely used for its upgradeability and protections against certain function and storage collision vulnerabilities.
 
 ### Pros
+* Eliminates possibility of function collisions for admins, since they are never redirected to the implementation contract.
+* Since the upgrade logic lives on the proxy, if a proxy is left in an uninitialized state or if the implementation contract is selfdestructed, then the implementation can still be set to a new address.
+* Reduces risk of storage collisions from use of [EIP-1967](#eip-1967-upgradeable-proxy) storage slots.
 * Block explorer compatibility.
-* Reduces risk of function collisions due to [ifAdmin() ](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) modifier.
-* Reduces risk of storage collisions from use of [EIP-1967](#EIP-1967-Upgradeable-Proxy) storage slots.
 
 ### Cons
-* Considered by some to be less secure than [UUPS](#Universal-Upgradeable-Proxy-Standard-(UUPS)).
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call not only incurs runtime gas cost of `delegatecall` from the [Proxy](#the-proxy) but also incurs cost of SLOAD for checking whether the caller is admin.
+* Because the upgrade logic lives on the proxy, there is more bytecode so the deploy costs are higher.
 
 ### Examples
 * [dYdX](https://github.com/dydxprotocol/perpetual/blob/99962cc62caed2376596da357a13f5c3d0ea5e59/contracts/protocol/PerpetualProxy.sol)
@@ -244,13 +245,15 @@ require(msg.sender != _getAdmin(), "TransparentUpgradeableProxy: admin cannot fa
 
 > What if we move the upgrade logic to the impl contract? 🤔
 
-EIP-1822 describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy (saving gas) at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy.
+[EIP-1822](https://eips.ethereum.org/EIPS/eip-1822) describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy.
 
-The UUPS proxy also contains a check when upgrading that ensures the new implementation contract is upgradeable.
+The downside of UUPS is that it is considered riskier than TPP.  If the proxy does not get initialized properly or if the implementation contract were to selfdestruct, then there is no way to save the proxy since the upgrade logic lives on the implementation contract.
 
-This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy).
+The UUPS proxy also contains an additional check when upgrading that ensures the new implementation contract is upgradeable.
 
-**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#EIP-1967-Proxy)).
+This proxy contract usually incorporates [EIP-1967](#eip-1967-upgradeable-proxy).
+
+**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#eip-1967-upgradeable-proxy)).
 
 **Upgrade logic** - Located in the implementation contract.
 
@@ -260,12 +263,15 @@ This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy)
 * These days this is the most widely used pattern when protocols look to deploy upgradeable contracts.
 
 ### Pros
-* Eliminates risk of functions on the implementation contract colliding with the proxy contract since that logic lives on the implementation contract.
-* Reduces risk of storage collisions from use of [EIP-1967](#EIP-1967-Upgradeable-Proxy) storage slots.
+* Eliminates risk of functions on the implementation contract colliding with the proxy contract since the upgrade logic lives on the implementation contract and there is no logic on the proxy besides the `fallback()` which delegatecalls to the impl contract.
+* Reduced runtime gas over TPP because the proxy does not need to check if the caller is admin.
+* Reduced cost of deploying a new proxy because the proxy only contains no logic besides the `fallback()`.
+* Reduces risk of storage collisions from use of [EIP-1967](#eip-1967-upgradeable-proxy) storage slots.
+* Block explorer compatibility.
 
 ### Cons
-* Somewhat more complex and more overhead than other proxy types.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Because the upgrade logic lives on the implementation contract, extra care must be taken to ensure the implementation contract cannot `selfdestruct` or get left in a bad state due to an improper initialization.  If the impl contract gets borked then the proxy cannot be saved.
+* Still incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 ### Examples
 * [Superfluid](https://github.com/superfluid-finance/protocol-monorepo)
@@ -290,12 +296,12 @@ This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy)
 
 > Is that a beacon in your proxy or are you just happy to see me? 🤔
 
-Most proxies discussed so far store the implementation contract address in the proxy contract storage. The Beacon pattern, popularized by [Dharma](https://github.com/dharma-eng/dharma-smart-wallet/blob/master/contracts/proxies/smart-wallet/UpgradeBeaconProxyV1.sol) in 2019, stores the address of the implementation contract in a separate "beacon" contract.  The address of the beacon is stored in the proxy contract.  To save gas, the proxy often stores the beacon address immutably.
+Most proxies discussed so far store the implementation contract address in the proxy contract storage. The Beacon pattern, popularized by [Dharma](https://github.com/dharma-eng/dharma-smart-wallet/blob/master/contracts/proxies/smart-wallet/UpgradeBeaconProxyV1.sol) in 2019, stores the address of the implementation contract in a separate "beacon" contract.  The address of the beacon is stored in the proxy contract using [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) storage pattern.
 
 With other types of proxies, when the implementation contract is upgraded, all of the proxies need to be updated.  However, with the Beacon proxy, only the beacon contract itself needs to be updated.
 
+Both the beacon address on the proxy as well as the implementation contract address on the beacon are settable by admin.  This allows for many powerful combinations when dealing with large quantities of proxy contracts that need to be grouped in different ways.
 
-EIP-1967 also references a Beacon address slot.
 
 **Implementation address** - Located in a unique storage slot in the beacon contract.  The beacon address lives in a unique storage slot in the proxy contract.
 
@@ -312,7 +318,7 @@ EIP-1967 also references a Beacon address slot.
 * Easier to upgrade multiple proxy contracts at the same time.
 
 ### Cons
-* Gas overhead of getting the beacon contract address from storage, calling beacon contract, and then getting the implementation contract, plus the extra gas required by using a proxy.
+* Gas overhead of getting the beacon contract address from storage, calling beacon contract, and then getting the implementation contract address from storage, plus the extra gas required by using a proxy.
 * Adds additional complexity.
 
 ### Examples
@@ -325,6 +331,7 @@ EIP-1967 also references a Beacon address slot.
 * [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionCollision)
 
 ### Variations
+* Immutable Beacon address - To save gas, the beacon address can be made immutable in the proxy contract.  The implementation contract would still be settable by updating it on the beacon.
 * [Storageless Upgradeable Beacon Proxy](https://forum.openzeppelin.com/t/a-more-gas-efficient-upgradeable-proxy-by-not-using-storage/4111) - In this pattern, the beacon contract does not store the implementation contract address in storage, but instead stores it in code.  The proxy contract loads it from the proxy directly via `EXTCODECOPY`.
 
 ### Further reading
@@ -367,6 +374,7 @@ Glossary of Diamond proxy uses a unique vocabulary:
 
 ### Cons
 * Additional gas required to access storage when routing functions.
+* Increased chance of storage colission due to complexity.
 * Complexity may be too much when simple upgradeability is required.
 
 ### Examples
@@ -527,7 +535,7 @@ Instead, an `initialize()` function is used to set initial storage values:
 
 > And the people said, "But we want to upgrade our immutable contracts!"
 
-The Upgradeable Proxy is similar to a [Proxy](#The-Proxy), except the implementation contract address is settable and kept in storage in the proxy contract. The proxy contract also contains permissioned upgrade functions. One of the [first upgradeable proxy contracts](https://gist.github.com/Arachnid/4ca9da48d51e23e5cfe0f0e14dd6318f) was written by [Nick Johnson](https://twitter.com/nicksdjohnson) in 2016.
+The Upgradeable Proxy is similar to a [Proxy](#the-proxy), except the implementation contract address is settable and kept in storage in the proxy contract. The proxy contract also contains permissioned upgrade functions. One of the [first upgradeable proxy contracts](https://gist.github.com/Arachnid/4ca9da48d51e23e5cfe0f0e14dd6318f) was written by [Nick Johnson](https://twitter.com/nicksdjohnson) in 2016.
 
 For security, it is also recommended to use a form of access control to differentiate between the owner/caller and the admin with permission to upgrade the contract.
 
@@ -541,13 +549,13 @@ For security, it is also recommended to use a form of access control to differen
 * A minimalistic upgrade contract. Useful for learning projects.
 
 ### Pros
-* Reduced deployment costs through use of the [Proxy](#The-proxy).
+* Reduced deployment costs through use of the [Proxy](#the-proxy).
 * Implementation contract is upgradeable.
 
 ### Cons
 * Prone to storage and function collisions.
 * Less secure than modern counterparts.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 ### Examples
 * This basic style is not widely used anymore.
@@ -569,7 +577,7 @@ For security, it is also recommended to use a form of access control to differen
 
 > The "solution" to storage collisions
 
-This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.  Instead the address is stored in a pre-agreed upon slot (for example ***0x360894...ca505d382bbc*** in [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol)) which has the added benefit of allowing block explorers to verify the contracts and properly show this information to end users.
+This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.  Instead the address is stored in a pre-agreed upon slot (for example ***0x360894...ca505d382bbc*** in [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol)) which has the added benefit of allowing block explorers to verify the contracts and properly show this information to end users.
 
 [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) also specifies a slot for admin storage (auth) as well as Beacon Proxies which will be discussed in detail below.
 
@@ -580,7 +588,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 **Contract verification** - Yes, most evm block explorers support it.
 
 ### Use cases
-* When you need more security than the basic [Upgradeable Proxy](#The-Upgradeable-Proxy).
+* When you need more security than the basic [Upgradeable Proxy](#the-upgradeable-proxy).
 
 ### Pros
 * Reduces risk of storage collisions.
@@ -589,7 +597,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 ### Cons
 * Susceptible to function collisions.
 * Less secure than modern counterparts.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 
 ### Examples
@@ -610,7 +618,7 @@ This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy), except that 
 
 > The "solution" to function collisions
 
-This is similar to the [Upgradeable Proxy](#The-Upgradeable-Proxy) and usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy), but when the permissioned functions are called, if admin is the caller then those functions are invoked directly on the proxy, otherwise the call is forwarded to the implementation contract. This is often implemented with a modifier like this one from [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51):
+This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy) and usually incorporates [EIP-1967](#eip-1967-upgradeable-proxy), but when the permissioned functions are called, if admin is the caller then those functions are invoked directly on the proxy, otherwise the call is forwarded to the implementation contract. This is often implemented with a modifier like this one from [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51):
 
 ```solidity
 modifier ifAdmin() {
@@ -622,7 +630,7 @@ modifier ifAdmin() {
 }
 ```
 
-**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#EIP-1967-Proxy)).
+**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#eip-1967-upgradeable-proxy)).
 
 **Upgrade logic** - Located in the proxy contract with use of a [modifier](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) to re-route non-admin callers.
 
@@ -635,11 +643,11 @@ modifier ifAdmin() {
 ### Pros
 * Block explorer compatibility.
 * Reduces risk of function collisions due to [ifAdmin() ](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/proxy/transparent/TransparentUpgradeableProxy.sol#L45-L51) modifier.
-* Reduces risk of storage collisions from use of [EIP-1967](#EIP-1967-Upgradeable-Proxy) storage slots.
+* Reduces risk of storage collisions from use of [EIP-1967](#eip-1967-upgradeable-proxy) storage slots.
 
 ### Cons
 * Considered by some to be less secure than [UUPS](#Universal-Upgradeable-Proxy-Standard-(UUPS)).
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 ### Examples
 * [dYdX](https://github.com/dydxprotocol/perpetual/blob/99962cc62caed2376596da357a13f5c3d0ea5e59/contracts/protocol/PerpetualProxy.sol)
@@ -667,9 +675,9 @@ EIP-1822 describes a standard for an upgradeable proxy pattern where the `upgrad
 
 The UUPS proxy also contains a check when upgrading that ensures the new implementation contract is upgradeable.
 
-This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy).
+This proxy contract usually incorporates [EIP-1967](#eip-1967-upgradeable-proxy).
 
-**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#EIP-1967-Proxy)).
+**Implementation address** - Located in a unique storage slot in the proxy contract ([EIP-1967](#eip-1967-upgradeable-proxy)).
 
 **Upgrade logic** - Located in the implementation contract.
 
@@ -680,11 +688,11 @@ This proxy contract usually incorporates [EIP-1967](#EIP-1967-Upgradeable-Proxy)
 
 ### Pros
 * Eliminates risk of functions on the implementation contract colliding with the proxy contract since that logic lives on the implementation contract.
-* Reduces risk of storage collisions from use of [EIP-1967](#EIP-1967-Upgradeable-Proxy) storage slots.
+* Reduces risk of storage collisions from use of [EIP-1967](#eip-1967-upgradeable-proxy) storage slots.
 
 ### Cons
 * Somewhat more complex and more overhead than other proxy types.
-* Every call incurs cost of `delegatecall` from the [Proxy](#The-Proxy).
+* Every call incurs cost of `delegatecall` from the [Proxy](#the-proxy).
 
 ### Examples
 * [Superfluid](https://github.com/superfluid-finance/protocol-monorepo)
