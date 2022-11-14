@@ -23,7 +23,7 @@ parent: Security Guide to Proxy Vulns
 - Contains an initialize function
 - May include the number 1822 in a comment of the contract or an imported contract (from [EIP-1822](https://eips.ethereum.org/EIPS/eip-1822), the UUPS EIP).
 
-## Metamorphic Proxy Identifiers
+## Metamorphic Contract Identifiers
 
 - Contains `selfdestruct` (or `delegatecall` to call `selfdestruct` in another contract) to allow the existing code to be removed and replaced by another contract that will be deployed at the same address.
 - Often does not have a `delegatecall`

@@ -137,7 +137,7 @@ None?
 
 ---
 
-## Metamorphic Proxy Rug Vulnerability
+## Metamorphic Contract Rug Vulnerability
 
 [Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
 
@@ -151,7 +151,7 @@ To test for this vulnerability, you can use one of the existing tools mentioned 
 3. Check if the target contract, created by a CREATE2 call, contains a selfdestruct or a delegatecall. If the delegatecall allows calling another contract's selfdestruct, it is the same result as finding a selfdestruct in the target contract.
 4. If CREATE2 was not used to create this contract but a selfdestruct or delegatecall exists, check if the parent of the target was created with a CREATE2 call. Continue checking the ancestry of the contract up the family tree until you reach an EOA address, because a CREATE2 anywhere in the target contract's ancestry can pose a risk.
 
-Even if the target contract you are examining cannot be replace with this vulnerability, it may perform an external call (call, staticcall, or delegatecall) to another contract which is vulnerable to the metamorphic proxy rug vulnerability. Consider testing all external addresses that are called by the target contract.
+Even if the target contract you are examining cannot be replace with this vulnerability, it may perform an external call (call, staticcall, or delegatecall) to another contract which is vulnerable to the metamorphic contract rug vulnerability. Consider testing all external addresses that are called by the target contract.
 
 ### Hacks
 

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Proxy basics
+title: Proxy Basics
 nav_order: 2
 ---
 
