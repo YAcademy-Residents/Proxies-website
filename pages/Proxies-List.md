@@ -502,7 +502,6 @@ Instead, an `initialize()` function is used to set initial storage values:
         // set some state vars
         // do initialization stuff
     }
-
 ```
 
 ### Use cases
@@ -528,6 +527,7 @@ Instead, an `initialize()` function is used to set initial storage values:
 ### Further reading
 * [The First Proxy Contract](https://ethereum-blockchain-developer.com/110-upgrade-smart-contracts/05-proxy-nick-johnson/)
 * [Writing Upgradeable Contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable)
+* [Initializeable - OZ](https://docs.openzeppelin.com/contracts/4.x/api/proxy#Initializable)
 
 ---------
 
@@ -605,6 +605,7 @@ This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that 
 
 
 ### Known vulnerabilities
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
 * [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UpgradeableProxy_functionCollission/UpgradeableProxy_functionCollissionHack.t.sol)
 
@@ -671,7 +672,7 @@ modifier ifAdmin() {
 
 > What if we move the upgrade logic to the impl contract? 🤔
 
-EIP-1822 describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy (saving gas) at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy.
+[EIP-1822](https://eips.ethereum.org/EIPS/eip-1822) describes a standard for an upgradeable proxy pattern where the `upgrade` logic is stored in the implementation contract.  This way, there is no need to check if the caller is admin in the proxy (saving gas) at the proxy level, saving gas.  It also eliminates the possibility of a function on the implementation contract colliding with the upgrade logic in the proxy.
 
 The UUPS proxy also contains a check when upgrading that ensures the new implementation contract is upgradeable.
 
@@ -724,18 +725,22 @@ With other types of proxies, when the implementation contract is upgraded, all o
 
 EIP-1967 also references a Beacon address slot.
 
+**Implementation address** - Located in a unique storage slot in the beacon contract.  The beacon address lives in a unique storage slot in the proxy contract.
+
+**Upgrade logic** - Upgrade logic typically lives in the beacon contract.
+
 ##### Contract Verification
 * Yes, most evm block explorers support it.
 
 ### Use cases
-* If you have a need for multiple proxy contracts that can all be upgraded at once by upgrading the Beacon.
+* If you have a need for multiple proxy contracts that can all be upgraded at once by upgrading the beacon.
 * Appropriate for situations that involve large amounts of proxy contracts based on multiple implementation contracts.  The beacon proxy pattern enables updating various groups of proxies at the same time.
 
 ### Pros
 * Easier to upgrade multiple proxy contracts at the same time.
 
 ### Cons
-* Gas overhead of getting the Beacon contract address from storage, calling Beacon contract, and then getting the implementation contract, plus the extra gas required by using a proxy.
+* Gas overhead of getting the beacon contract address from storage, calling beacon contract, and then getting the implementation contract, plus the extra gas required by using a proxy.
 * Adds additional complexity.
 
 ### Examples
@@ -743,6 +748,7 @@ EIP-1967 also references a Beacon address slot.
 * [Dharma](https://github.com/dharma-eng/dharma-smart-wallet/blob/master/contracts/proxies/smart-wallet/UpgradeBeaconProxyV1.sol)
 
 ### Known vulnerabilities
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_Uninitialized)
 * [Function collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/UUPS_functionCollision)
 
@@ -797,8 +803,7 @@ Glossary of Diamond proxy uses a unique vocabulary:
 * [Complete list of examples](https://github.com/mudgen/awesome-diamonds#projects-using-diamonds).
 
 ### Known vulnerabilities
-* No known vulnerabilities aside from the general risk associated with implementing patterns with any degree of complexity.
-
+* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/blob/main/src/UUPS_functionCollision/UUPSProxy_functionCollission.t.sol)
 
 ### Variations
 * [vtable](https://github.com/OpenZeppelin/openzeppelin-labs/tree/master/upgradeability_with_vtable)
