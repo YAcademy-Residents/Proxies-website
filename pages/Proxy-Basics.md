@@ -8,7 +8,7 @@ nav_order: 2
 
 **Warning:** this research assumes you are familiar with how `delegatecall()` works and how the logic of the callee contract applies the caller's context. If you are unfamiliar with how `delegatecall()` works, consult in-depth explanations such as [this one](https://medium.com/coinmonks/delegatecall-calling-another-contract-function-in-solidity-b579f804178c), [this one](https://blog.openzeppelin.com/ethereum-in-depth-part-1-968981e6f833/), or [this one](https://docs.soliditylang.org/en/latest/introduction-to-smart-contracts.html#delegatecall-and-libraries).
 
-## Why do I need a proxy?
+## Why do I need a proxy and how do I use it?
 
 By design, contract code on a blockchain is **immutable**. Though a key feature, it leads to difficulty when considering upgradeability. Newer entrants may wonder why "upgrading" on a blockchain is necessary. Inevitabilities requiring code changes still remain, including: bug fixes, patches, optimizations, feature releases, etc.
 
