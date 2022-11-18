@@ -8,8 +8,10 @@ permalink: /
 
 # yAcademy Proxies Research
 
-Proxies are a powerful but often misunderstood component in smart contracts. This research effort compiled proxy knowledge with the goal of assisting with improving the correctness of proxy implementations and improving security audits involving proxies. By sharing knowledge to increase the probability of a secure upgrade process, we can improve the security of the entire ecosystem.
+In Web3, the **Proxy** or **Proxy Delegate** is a [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern) commonly used to introduce upgradability in smart contracts. While they can be extremely *powerful*, they are also *commonly misunderstood* — leading to incorrect implementations and security issues. 
 
-This website is a work in progress and proxy information evolves over time. Please submit any corrections to [this site's github repo](https://github.com/engn33r/Proxies-website/tree/main/pages).
+This research effort compiles proxy knowledge with the goal of building a systematic correctness for proxy implementations, and supplementing security audits containing proxies. By sharing knowledge, we hope to improve the security of smart contracts, and the greater ecosystem.
 
-This research effort was led by [engn33r](https://github.com/engn33r) and [devtooligan](https://github.com/devtooligan) of yAcademy.
+**This website is a work in progress as proxies evolve over time. Please submit any corrections to [this site's github repo](https://github.com/engn34r/Proxies-website/tree/main/pages).*
+
+***Research effort led by [engn33r](https://github.com/engn33r) and [devtooligan](https://github.com/devtooligan) of [yAcademy](yacademy.dev).*
