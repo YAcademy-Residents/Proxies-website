@@ -14,4 +14,4 @@ This research effort compiles proxy knowledge with the goal of improving the cor
 
 **This website is a work in progress as proxies evolve over time. Please submit any corrections to [this site's github repo](https://github.com/YAcademy-Residents/Proxies-website/tree/main/pages).*
 
-***Research effort led by [engn33r](https://github.com/engn33r) and [devtooligan](https://github.com/devtooligan) of [yAcademy](yacademy.dev).*
+***Research effort led by [engn33r](https://github.com/engn33r) and [devtooligan](https://github.com/devtooligan) of [yAcademy](https://yacademy.dev/).*
