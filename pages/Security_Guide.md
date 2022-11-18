@@ -139,7 +139,7 @@ None?
 
 ## Metamorphic Contract Rug Vulnerability
 
-[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
+[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/metamorphic_rug)
 
 The CREATE2 opcode was introduced in the Constantinople hardfork with [EIP-1014](https://eips.ethereum.org/EIPS/eip-1014). It allows a contract to be deployed at an address that can be calculated in advance, unlike the CREATE opcode. It is possible to deploy a contract with `selfdestruct`, destroy the contract, and then deploy a new contract with different code at the same address as the original contract. If a user is unaware that the code at this address changed since they originally interacted with the contract, they might end up interacting with a malicious contract. 
 

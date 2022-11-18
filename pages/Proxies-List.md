@@ -421,6 +421,7 @@ This can be achieved by having the initcode retrieve the creation code from the 
 * The `selfdestruct` opcode may be removed in the future.
 
 ### Examples
+* [Example contracts from 0age](https://github.com/0age/metamorphic#metamorphic)
 * This is more of an experimental type. Mostly used by MEV searchers.
 
 ### Known vulnerabilities
