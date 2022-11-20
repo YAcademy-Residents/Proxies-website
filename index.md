@@ -8,7 +8,7 @@ permalink: /
 
 # yAcademy Proxies Research
 
-In Web3, the **Proxy** or **Proxy Delegate** is a [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern) commonly used to introduce upgradability in smart contracts. While they can be extremely *powerful*, they are also *commonly misunderstood* — leading to incorrect implementations and security issues. 
+In Web3, the **Proxy** or **Proxy Delegate** is a [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern) commonly used to introduce upgradability in smart contracts. While it can be extremely *powerful*, it is also *commonly misunderstood* — leading to incorrect implementations and security issues. 
 
 This research effort compiles proxy knowledge with the goal of improving the correctness of proxy implementations and providing a useful resource for security reviews of proxy contracts. By sharing knowledge, we hope to improve the security of smart contracts and the greater ecosystem.
 
