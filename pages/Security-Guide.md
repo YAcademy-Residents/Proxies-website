@@ -97,13 +97,13 @@ None?
 - [Ethernaut Level 24 "Puzzle Wallet"](https://github.com/OpenZeppelin/ethernaut/blob/master/contracts/contracts/levels/PuzzleWallet.sol)
 - [Underhanded Solidity 2020 entry 4](https://github.com/ethereum/solidity-underhanded-contest/tree/master/2020/submissions_2020/submission4_JaimeIglesias) from Jaime Iglesias
 
----
-
 ### Further reading
 
 - [OpenZeppelin explanation](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions)
 - [semgrep rule to detect a specific case of proxy storage collision](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/proxy-storage-collision.yaml)
 - [MixBytes storage collision audit finding](https://mixbytes.io/blog/collisions-solidity-storage-layouts)
+
+---
 
 ## Function Clashing Vulnerability
 
@@ -235,8 +235,6 @@ None?
 ---
 
 ## Delegatecall external contract missing existence check
-
-[Playground Link](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground)
 
 When `delegatecall` is used, there is no automated check for whether the external contract exists. If the external contract called does not exist, the return value will be `true`. This is documented in a [warning note in the solidity documentation](https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions) with the following:
 
