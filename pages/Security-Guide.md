@@ -184,7 +184,7 @@ There are unexpected edge cases when `delegatecall` and `selfdestruct` are used 
 
 This vulnerability is easy to identify. First, if a contract has a `delegatecall` that delegates to a user-provided address (such as a function argument in an external function), this is a substantial security risk overall
 
-If a contract has a `delegatecall` to a hardcoded target contract, check if the target contract contains a `selfdestruct`. If the target contract does not contain `selfdestruct` but contains a `delegatecall`, then check the contract that is delegated to for a `selfdestruct` (and continue the process if another `delegatecall` is found). If there is a `selfdestruct` in the target contract, the original contract that contains the `delegatecall` could be destroyed.
+If a contract has a `delegatecall` to a hardcoded target contract, check if the target contract contains a `selfdestruct`. If the target contract does not contain `selfdestruct` but contains a `delegatecall`, then check the contract that is delegated to for a `selfdestruct` (and continue the process if another `delegatecall` is found). If there is a `selfdestruct` in the target contract, the original contract that contains the `delegatecall` could be destroyed. If the master contract used for EIP-1167 cloning is selfdestructed, all clones created from this contract [will stop working](https://github.com/optionality/clone-factory#warnings).
 
 ### Hacks
 
