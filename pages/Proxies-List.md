@@ -302,8 +302,7 @@ Both the beacon address on the proxy as well as the implementation contract addr
 
 **Upgrade logic** - Upgrade logic typically lives in the beacon contract.
 
-##### Contract Verification
-* Yes, most evm block explorers support it.
+**Contract Verification** - Yes, most evm block explorers support it.
 
 ### Use cases
 * If you have a need for multiple proxy contracts that can all be upgraded at once by upgrading the beacon.
@@ -357,8 +356,7 @@ Glossary of Diamond proxy uses a unique vocabulary:
 |Single cut diamond| Remove upgradeability functions|
 
 
-##### Contract Verification
-* Contracts can be verified on Etherscan with the help of a tool called **Louper** ([example](https://louper.dev/diamond/0x17525e4f4af59fbc29551bc4ece6ab60ed49ce31)).
+**Contract Verification** - Contracts can be verified on Etherscan with the help of a tool called **Louper** ([example](https://louper.dev/diamond/0x17525e4f4af59fbc29551bc4ece6ab60ed49ce31)).
 
 ### Use cases
 * A complex system where the highest level of upgradeability and modular interoperability is required.
@@ -403,8 +401,7 @@ When it's time for an upgrade, the metamorphic contract uses `selfdestruct` and 
 This can be achieved by having the initcode retrieve the creation code from the storage of a separate external contract.  In this way, the initcode will always be the same, and therefore `create2` can be used to deploy to the same address.
 
 
-##### Contract Verification
-* Yes, metamorphic contracts can be verified.
+**Contract Verification** - Yes, metamorphic contracts can be verified.
 
 ### Use cases
 * Contracts that contain only logic (similar to Solidity external libraries)
