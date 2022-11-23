@@ -23,7 +23,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 
 **Upgrade logic** - There is no upgradeability in a pure proxy contract.
 
-**Contract verification** - Works with Etherscan ([example]((https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#readProxyContract))) and other block explorers.
+**Contract verification** - Works with Etherscan ([example](https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#readProxyContract)) and other block explorers.
 
 
 ### Use cases
