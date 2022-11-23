@@ -64,7 +64,19 @@ None?
 
 A storage collision happens when the storage slot layout in the implementation contract does not match the storage slot layout in the proxy contract. This causes a problem because the `delegatecall` in the proxy contract means that the implementation contract is using the proxy contract's storage, but the variables in the implementation contract determine where that data is stored. If there is a mismatch between the proxy contract storage slots and the implementation contract storage slots, a storage collision can happen.
 
-Take the Audius hack as an example. TODO: Add screenshots of storage slot layout that caused the issue. Also note the address(es) of the Audius contracts for others to investigate too.
+Take the Audius hack as an example. The AudiusAdminUpgradeabilityProxy contract storage slots collided with the initialization boolean values that indicated whether the proxy was initialized or not. The links to writeups about the details of the Audius hack are found below.
+
+![AudiusAdminUpgradeabilityProxy storage slots after mitigation](../../assets/images/AudiusAdminUpgradeabilityProxy_before.jpg)
+
+*The proxy contract storage slots visualized [with sol2uml](https://github.com/naddison36/sol2uml)*
+
+![DelegateManager storage slots before mitigation](../../assets/images/DelegateManagerV2_before.jpg)
+
+*The DelegateManager contract storage before mitigation. The storage of the boolean values collide with the proxyAdmin address in the proxy contract.*
+
+![DelegateManager storage slots after mitigation](../../assets/images/DelegateManagerV2_after.jpg)
+
+*The DelegateManager contract storage after mitigation. The storage of the boolean values has been moved to a new storage slot to avoid a storage collision.*
 
 ### Testing procedure
 
