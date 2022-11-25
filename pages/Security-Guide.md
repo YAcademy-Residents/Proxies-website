@@ -92,6 +92,8 @@ OpenZeppelin [previously investigated an automated detection strategy](https://g
 
 Slither has a `slither-check-upgradeability` tool that has [several detectors for storage layout issues](https://github.com/crytic/slither/wiki/Upgradeability-Checks).
 
+There is [a semgrep rule](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/proxy-storage-collision.yaml) designed to detect the Audius hack problem pattern, but the semgrep rule does not appear to be a robust method of identifying proxy collisions.
+
 ### Hacks
 
 - [Furucombo](https://medium.com/furucombo/furucombo-post-mortem-march-2021-ad19afd415e) (Related writeups [here](https://rekt.news/furucombo-rekt/) and [here](https://github.com/OriginProtocol/security/blob/master/incidents/2021-02-27-Furucombo.md))
