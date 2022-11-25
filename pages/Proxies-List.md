@@ -400,13 +400,13 @@ When it's time for an upgrade, the metamorphic contract uses `selfdestruct` and 
 
 This can be achieved by having the initcode retrieve the creation code from the storage of a separate external contract.  In this way, the initcode will always be the same, and therefore `create2` can be used to deploy to the same address.
 
+Metamorphic contracts are not recommended for new contracts because the `selfdestruct` opcode is scheduled to be removed from Ethereum in the near future. See [EIP-4758](https://eips.ethereum.org/EIPS/eip-4758) for details.
 
 **Contract Verification** - Yes, metamorphic contracts can be verified.
 
 ### Use cases
 * Contracts that contain only logic (similar to Solidity external libraries)
 * Contracts with little state that changes infrequently, such as beacons.
-
 
 ### Pros
 * Does not require the use of a proxy with `delegatecall`.
