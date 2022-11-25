@@ -419,7 +419,7 @@ Metamorphic contracts are not recommended for new contracts because the `selfdes
 
 ### Examples
 * [Example contracts from 0age](https://github.com/0age/metamorphic#metamorphic)
-* This is more of an experimental type. Mostly used by MEV searchers.
+* This is more of an experimental type. Mostly used by MEV searchers (etherscan examples [here](https://etherscan.io/address/0x0000000000007f150bd6f54c40a34d7c3d5e9f56#code) and [here](https://etherscan.io/address/0x000000005736775feb0c8568e7dee77222a26880#code))
 
 ### Known vulnerabilities
 * Not vulnerable to the typical upgradeable proxy vulnerabilities since it doesn't use a proxy or an initializer.
