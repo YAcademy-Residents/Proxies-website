@@ -43,8 +43,33 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 
 ### Variations
-* [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way.  This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
+* [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way. The minimal proxy contracts are also called as `clones`. This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
 
+Though this is a great technique to save gas on deployment, there is a **gotcha** that everyone should be aware of before using minimal proxy pattern in their production code. 
+
+The storage slots  in the clones/minimal-proxies will be pointing to the default values unless they are `immutable` or `constant`. This could cause serious issues.
+
+Here's an example to give you a better idea:
+
+```solidity
+contract Cloneable {
+    uint256 immutable public value2 = 100; // will be `100` on cloned contracts
+    address immutable public ownerImmutable; // will be the `deployer address` on clones
+    address public owner; // will be `address(0)` on clones
+    uint256 public value = 1000; // will be `0` on cloned contracts before initialization
+
+    constructor() { 
+        ownerImmutable = msg.sender; 
+        owner = msg.sender;  // useless op since the slot since it is not persisted on clones.
+    }
+
+    function initialize(uint256 _value) external {
+        require(value == 0, "INIT");
+        value = _value;
+    }
+}
+```
+You can see that even when the `owner` and `value` storage variables are populated during the deployment of the `Cloneable` contract, their values will be pointing to the default value (`address(0)` for `owner` and `0` for `value`) in the clones.
 ### Further reading
 * [A Minimal Proxy in the Wild](https://blog.originprotocol.com/a-minimal-proxy-in-the-wild-ae3f7b8da990)
 * [OpenZeppelin core Proxy contract](https://docs.openzeppelin.com/contracts/4.x/api/proxy#Proxy)
