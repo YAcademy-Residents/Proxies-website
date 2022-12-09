@@ -43,7 +43,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 
 ### Variations
-* [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way. The minimal proxy contracts are also called as `clones`. This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
+[The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way. The minimal proxy contracts are also called as `clones`. This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
 
 Though this is a great technique to save gas on deployment, there is a **gotcha** that everyone should be aware of before using minimal proxy pattern in their production code. 
 
