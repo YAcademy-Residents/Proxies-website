@@ -15,7 +15,8 @@ has_children: true
 
 > And Vitalik said, "Let there be Proxies!"
 
-The proxy itself is not inherently upgradeable, but it is the basis for just about all upgradeable proxy patterns.  Calls made to the **proxy** contract are forwarded to the **implementation** contract using `delegatecall`.
+The proxy itself is not inherently upgradeable, but it is the basis for just about all upgradeable proxy patterns.  Calls made to the **proxy** contract are forwarded to the **implementation** contract using `delegatecall`.  The **implementation** contract is also referred to as the **logic** contract.
+
 
 In some variants, calls to the proxy are only forwarded if the caller matches an "owner" address.
 
@@ -143,7 +144,12 @@ For security, it is also recommended to use a form of access control to differen
 
 > The "solution" to storage collisions
 
-This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.  Instead the address is stored in a pre-agreed upon slot (for example ***0x360894...ca505d382bbc*** in [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol)) which has the added benefit of allowing block explorers to verify the contracts and properly show this information to end users.
+This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that it reduces risk of storage collision by using the [unstructured storage pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#unstructured-storage-proxies). It does **not** store the implementation contract address in slot 0 or any other standard storage slot.
+
+Instead the address is stored in a pre-agreed upon slot. For example [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol) use the keccak-256 hash of the string "eip1967.proxy.implementation" **minus one***. Because this slot is widely used, block explorers can identify and handle when proxies are being used.
+
+*The minus provides additional safety because without it, the address has a known preimage, but after subtracting 1, the preimage is unknown. Having a known preimage makes it slightly easier to find a second preimage.  With a second preimage a malicious dev could design an innocent looking logic contract that overwrites a pre-existing storage slot.
+
 
 [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) also specifies a slot for admin storage (auth) as well as Beacon Proxies which will be discussed in detail below.
 
