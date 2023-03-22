@@ -14,3 +14,11 @@ If you read the [solidity docs about `selfdestruct`](https://docs.soliditylang.o
 ## Delegatecall opcode
 
 [EIP-7](https://eips.ethereum.org/EIPS/eip-7) introduced the `delegatecall` opcode as a bug fix to `callcode`, which was introduced in the [Homestead hard fork in 2016](https://ethereum.org/en/history/#homestead). Because proxy development only started gathering momentum in 2017, `callcode` was never used for proxies, which is why `delegatecall` is the opcode that we all associate with proxies today.
+
+## Comparison between Callcode and Delegatecall
+
+Below is the diagram of Proxies built with `callcode` and `delegatecall` (*Note: not recommend to use `callcode` in Proxy*).
+
+![Comparison with Proxy](../../assets/images/Comparison_Callcode_Delegatecall.png)
+
+Both `callcode` and `delegatecall` have the same behavior on storage. That is, both of them can execute implementation's code and do operations with proxy's storage. The differences between them are the `msg.value` and `msg.sender`. In `callcode`, `msg.value` can be customized and `msg.sender` is changed to Proxy's address, while in `delegatecall`, both `msg.value` and `msg.sender` remains the same.
