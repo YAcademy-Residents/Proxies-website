@@ -332,7 +332,7 @@ Both the beacon address on the proxy as well as the implementation contract addr
 
 ### Variations
 * Immutable Beacon address - To save gas, the beacon address can be made immutable in the proxy contract.  The implementation contract would still be settable by updating it on the beacon.
-* [Storageless Upgradeable Beacon Proxy](https://forum.openzeppelin.com/t/a-more-gas-efficient-upgradeable-proxy-by-not-using-storage/4111) - In this pattern, the beacon contract does not store the implementation contract address in storage, but instead stores it in code.  The proxy contract loads it from the proxy directly via `EXTCODECOPY`.
+* [Storageless Upgradeable Beacon Proxy](https://forum.openzeppelin.com/t/a-more-gas-efficient-upgradeable-proxy-by-not-using-storage/4111) - In this pattern, the beacon contract does not store the implementation contract address in storage, but instead stores it in code.  The proxy contract loads it from the beacon directly via `EXTCODECOPY`.
 
 ### Further reading
 * [How to create a Beacon Proxy](https://medium.com/coinmonks/how-to-create-a-beacon-proxy-3d55335f7353)
