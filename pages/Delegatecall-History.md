@@ -17,8 +17,8 @@ If you read the [solidity docs about `selfdestruct`](https://docs.soliditylang.o
 
 ## Comparison between Callcode and Delegatecall
 
-Below is the diagram of Proxies built with `callcode` and `delegatecall` (*Note: not recommend to use `callcode` in Proxy*).
+Below is a diagram comparing proxies built with `callcode` and `delegatecall` (*Note: it is not recommended to use `callcode` in proxies*).
 
 ![Comparison with Proxy](../../assets/images/Comparison_Callcode_Delegatecall.png)
 
-Both `callcode` and `delegatecall` have the same behavior on storage. That is, both of them can execute implementation's code and do operations with proxy's storage. The differences between them are the `msg.value` and `msg.sender`. In `callcode`, `msg.value` can be customized and `msg.sender` is changed to Proxy's address, while in `delegatecall`, both `msg.value` and `msg.sender` remains the same.
+Both `callcode` and `delegatecall` have the same behavior on storage. That is, both of them can execute the implementation's code and perform operations with proxy's storage. The difference between them is in `msg.value` and `msg.sender`. In `callcode`, `msg.value` can be customized to hold a new value in the implementation contract and `msg.sender` is changed to Proxy's address. In `delegatecall`, both `msg.value` and `msg.sender` remain the same in the proxy and implementation contracts.
