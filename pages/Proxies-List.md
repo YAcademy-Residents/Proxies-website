@@ -41,7 +41,7 @@ In some variants, calls to the proxy are only forwarded if the caller matches an
 * [Synthetix](https://github.com/Synthetixio/synthetix/pull/1191)
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 
 ### Variations
 * [The EIP-1167 standard](https://eips.ethereum.org/EIPS/eip-1167) was created in June '18 with the goal of standardizing a way to clone contract functionality simply, cheaply, and in an immutable way.  This standard contains a minimal bytecode redirect implementation that has been optimized for the proxy contract. This is often used with a [factory pattern](https://github.com/optionality/clone-factory).
@@ -129,7 +129,7 @@ For security, it is also recommended to use a form of access control to differen
 * This basic style is not widely used anymore.
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized/UUPS_Uninitialized)
 * [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/storage_collision)
 * [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/function_clashing)
@@ -177,7 +177,7 @@ Instead the address is stored in a pre-agreed upon slot. For example [OpenZeppel
 
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized/UUPS_Uninitialized)
 * [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/function_clashing/UUPS_functionClashing)
 
@@ -234,7 +234,7 @@ require(msg.sender != _getAdmin(), "TransparentUpgradeableProxy: admin cannot fa
 * [Hundreds of projects on Github](https://github.com/search?q=adminupgradeabilityproxy&type=Code)
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/function_clashing)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized/UUPS_Uninitialized)
 * [Storage collision](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/storage_collision)
 
@@ -326,7 +326,7 @@ Both the beacon address on the proxy as well as the implementation contract addr
 * [Dharma](https://github.com/dharma-eng/dharma-smart-wallet/blob/master/contracts/proxies/smart-wallet/UpgradeBeaconProxyV1.sol)
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 * [Uninitialized proxy](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/uninitialized/UUPS_Uninitialized)
 * [Function clashing](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/function_clashing)
 
@@ -382,7 +382,7 @@ Glossary of Diamond proxy uses a unique vocabulary:
 * [Complete list of examples](https://github.com/mudgen/awesome-diamonds#projects-using-diamonds).
 
 ### Known vulnerabilities
-* [Delegatecall not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
+* [Delegatecall and selfdestruct not allowed in implementation](https://github.com/YAcademy-Residents/Solidity-Proxy-Playground/tree/main/src/delegatecall_with_selfdestruct/UUPS_selfdestruct)
 
 ### Variations
 * [vtable](https://github.com/OpenZeppelin/openzeppelin-labs/tree/master/upgradeability_with_vtable)
