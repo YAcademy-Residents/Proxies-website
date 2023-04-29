@@ -17,6 +17,7 @@ Storing state variables is important for any smart contract, but especially so f
 - [forge inspect](https://book.getfoundry.sh/reference/forge/forge-inspect?highlight=layout): Lists the storage slots for variables in a contract. If the code is verified on-chain, it can be downloaded to your local system using [ethereum-sources-downloader](https://www.npmjs.com/package/ethereum-sources-downloader).
 - [hardhat-storage-layout](https://github.com/aurora-is-near/hardhat-storage-layout): A hardhat plugin to view storage slots of variables.
 - [solc \-\-storage-layout](https://docs.soliditylang.org/en/latest/using-the-compiler.html#input-description): Similar to foundry, can output the storage slot and offset for each state variable.
+- [MetaDock Chrome Extension](https://chrome.google.com/webstore/detail/metadock/fkhgpeojcbhimodmppkbbliepkpcgcoo) enhances etherscan and other blockchain scanners to show the values of private variables that normally cannot be accessed on etherscan.
 
 ## Storage Slot Analysis for Unverified Contracts (and Verified Contracts)
 - [Contract Library](https://library.dedaub.com/): When viewing a contract, can navigate to the "Read/Write" tab and choose "Storage dump" to see all values stored in all storage slots. Doesn't require a verified contract. The decompiler is also very helpful.
