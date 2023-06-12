@@ -92,7 +92,7 @@ OpenZeppelin [previously investigated an automated detection strategy](https://g
 
 Slither has a `slither-check-upgradeability` tool that has [several detectors for storage layout issues](https://github.com/crytic/slither/wiki/Upgradeability-Checks).
 
-There is [a semgrep rule](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/proxy-storage-collision.yaml) designed to detect the Audius hack problem pattern, but the semgrep rule does not appear to be a robust method of identifying proxy collisions.
+There is [a semgrep rule](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/security/proxy-storage-collision.yaml) designed to detect the Audius hack problem pattern, but the semgrep rule does not appear to be a robust method of identifying proxy collisions.
 
 ### Hacks
 
@@ -114,7 +114,7 @@ None?
 ### Further reading
 
 - [OpenZeppelin explanation](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies#storage-collisions-between-implementation-versions)
-- [semgrep rule to detect a specific case of proxy storage collision](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/proxy-storage-collision.yaml)
+- [semgrep rule to detect a specific case of proxy storage collision](https://github.com/Decurity/semgrep-smart-contracts/blob/master/solidity/security/proxy-storage-collision.yaml)
 - [MixBytes storage collision audit finding](https://mixbytes.io/blog/collisions-solidity-storage-layouts)
 
 ---
