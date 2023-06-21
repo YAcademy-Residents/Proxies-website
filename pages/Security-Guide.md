@@ -237,6 +237,7 @@ None?
 ### Bug Bounties
 
 - [dYdX deposit proxy post-mortem](https://dydx.exchange/blog/deposit-proxy-post-mortem) ($500,000 bounty)
+- [Astaria beacon proxy thread](https://twitter.com/apoorvlathey/status/1671308180545241088)
 
 ### CTF Examples
 
