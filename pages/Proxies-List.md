@@ -148,7 +148,7 @@ This is similar to the [Upgradeable Proxy](#the-upgradeable-proxy), except that 
 
 Instead the address is stored in a pre-agreed upon slot. For example [OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.7.3/contracts/proxy/ERC1967/ERC1967Upgrade.sol) use the keccak-256 hash of the string "eip1967.proxy.implementation" **minus one***. Because this slot is widely used, block explorers can identify and handle when proxies are being used.
 
-*The minus provides additional safety because without it, the slot has a known preimage, but after subtracting 1, the preimage is unknown. For a known preimage, it may be possible to overwrite the storage slot. For example, storage slot for a key in a mapping is determined using a keccak-256 hash. If it accidentally matches the preimage of the implementation address slot, it can be overwritten.
+*The minus provides additional safety because without it, the slot has a known preimage, but after subtracting 1, the preimage is unknown. For a known preimage, the storage slot may be overwritten via a mapping for example, where storage slot for its key is determined using a keccak-256 hash.
 
 
 [EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) also specifies a slot for admin storage (auth) as well as Beacon Proxies which will be discussed in detail below.
