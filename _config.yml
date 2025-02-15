@@ -1,4 +1,4 @@
 plugins:
   - jekyll-redirect-from
 
-redirect_to: https://reports.electisec.tech
+redirect_to: https://research.electisec.tech/proxies
